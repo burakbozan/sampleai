@@ -1,0 +1,12 @@
+product-service:
+  image:
+    tag: latest
+order-service:
+  image:
+    tag: latest
+auth-service:
+  image:
+    tag: latest
+api-gateway:
+  image:
+    tag: latest

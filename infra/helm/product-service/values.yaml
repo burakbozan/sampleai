@@ -1,0 +1,9 @@
+image:
+  repository: sampleai/product-service
+  tag: latest
+replicaCount: 2
+service:
+  port: 80
+  targetPort: 8081
+auth:
+  jwtSecret: "REPLACE_ME"

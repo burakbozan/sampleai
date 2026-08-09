@@ -1,0 +1,10 @@
+image:
+  repository: sampleai/api-gateway
+  tag: latest
+replicaCount: 2
+service:
+  port: 80
+  targetPort: 8080
+redis:
+  host: redis
+  port: 6379

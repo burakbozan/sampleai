@@ -1,0 +1,17 @@
+apiVersion: v2
+name: ecommerce-chart
+description: Umbrella chart for e-commerce platform
+version: 0.1.0
+dependencies:
+  - name: product-service
+    version: 0.1.0
+    repository: "file://../product-service"
+  - name: order-service
+    version: 0.1.0
+    repository: "file://../order-service"
+  - name: auth-service
+    version: 0.1.0
+    repository: "file://../auth-service"
+  - name: api-gateway
+    version: 0.1.0
+    repository: "file://../api-gateway"
