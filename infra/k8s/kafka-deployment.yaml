@@ -1,3 +1,6 @@
+# DEPRECATED placeholder manifest
+# Use Helm chart (Bitnami) or a managed Kafka in production. See infra/helm/README.md for recommended commands.
+
 # Placeholder Kafka deployment for local clusters — in production use managed Kafka or dedicated cluster
 apiVersion: apps/v1
 kind: Deployment
@@ -35,4 +38,5 @@ spec:
   - port: 9092
     targetPort: 9092
 
-# Note: Zookeeper and proper storage config required; this is a placeholder manifest.
+# NOTE: This file is for quick local testing only. Replace with:
+# helm install market-kafka bitnami/kafka --set replicaCount=3 --set zookeeper.replicaCount=3 --set persistence.enabled=true
