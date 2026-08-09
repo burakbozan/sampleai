@@ -24,4 +24,13 @@ public class JwtUtil {
             throw new SignatureException("Invalid token");
         }
     }
+
+    public String rolesFromToken(String token) {
+        try {
+            Object claim = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody().get("roles");
+            return claim == null ? "" : claim.toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }

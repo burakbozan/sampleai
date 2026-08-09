@@ -1,0 +1,9 @@
+image:
+  repository: market-store/auth-service
+  tag: latest
+replicaCount: 2
+service:
+  port: 80
+  targetPort: 8083
+auth:
+  jwtSecret: "REPLACE_ME"

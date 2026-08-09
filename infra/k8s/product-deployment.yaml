@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: product
-        image: sampleai/product-service:latest
+      image: market-store/product-service:latest
         ports:
         - containerPort: 8081
         env:

@@ -37,7 +37,8 @@ public class AuthController {
         String password = body.get("password");
         return users.findByUsername(username).map(u -> {
             if (BCrypt.checkpw(password, u.getPasswordHash())) {
-                String token = jwt.generateToken(username);
+                // assign default role USER; in real app fetch from user store
+                String token = jwt.generateToken(username, java.util.List.of("USER"));
                 return ResponseEntity.ok(Map.of("token", token));
             } else return ResponseEntity.status(401).build();
         }).orElse(ResponseEntity.status(401).build());

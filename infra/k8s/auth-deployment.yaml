@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: auth
-        image: sampleai/auth-service:latest
+        image: market-store/auth-service:latest
         ports:
         - containerPort: 8083
         env:

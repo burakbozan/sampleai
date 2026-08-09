@@ -1,24 +1,36 @@
-# E-commerce Microservices
+# Market Store E-commerce Platform
 
-Monorepo scaffold for an e-commerce platform using DDD, microservices, Spring Boot (Java) backend and React frontend.
+A sample e-commerce microservices platform demonstrating Domain-Driven Design (DDD), Behavior-Driven Development (BDD), Test-Driven Development (TDD), and 12-factor principles. Built with Spring Boot microservices (Java) and a React frontend.
 
 Contents:
-- services/: product, order, auth microservices (each DB-per-service, Spring Boot)
-- gateway/: API Gateway (Spring Cloud Gateway)
-- infra/: k8s/openshift manifests, Istio integration, placeholders for Redis/Kafka
+- services/: product, order, auth microservices (DB-per-service, Spring Boot)
+- gateway/: Spring Cloud Gateway with rate-limiting and routing
+- infra/: k8s manifests, Istio integration, Helm charts and third-party chart references
 - frontend/: React app (Vite + TypeScript skeleton)
 - docs/: architecture, development guides (DDD/BDD/TDD, 12-factor)
 
+Recent additions:
+- JWT-based authentication (Auth service) and JWT filters that populate SecurityContext with username and roles
+- Product & Order services protected by role-based checks (ROLE_USER required for creating resources)
+- Spring Cloud Gateway configured with RequestRateLimiter (Redis) and integration tests
+- Kafka producer (Order)>consumer (Product) skeletons for domain events (topic: orders.created)
+- Helm charts per-service and an umbrella chart; CI workflow to lint and template charts
+- Istio DestinationRules/VirtualServices for circuit-breaking and rate-limiting placeholders
+
 Quick start (local development):
-1. Build Java services with Maven (each service folder) and run them locally (ports: 8081 product, 8082 order, 8083 auth, 8080 gateway).
-2. Start frontend: cd frontend/react-app && npm install && npm run dev.
-3. For rate-limiter tests, run a Redis instance and configure auth.jwt.secret env var for JWT.
+1. Build services: mvn -f services/product-service/ test (repeat for order, auth, gateway).
+2. Start services locally (ports: product 8081, order 8082, auth 8083, gateway 8080).
+3. Start frontend: cd frontend/react-app && npm install && npm run dev.
+4. For gateway rate limits, run Redis (or helm install bitnami/redis). For messaging, run Kafka (or use a managed Kafka).
+
+CI & Deployment:
+- GitHub Actions workflow (/.github/workflows/ci-helm-tests.yml) runs Helm lint/template and service unit tests.
+- Helm charts are under infra/helm. The umbrella chart (infra/helm/ecommerce-chart) references per-service charts and recommended third-party charts for Redis/Kafka.
 
 Notes & next steps:
-- Secrets: store JWT secrets and sensitive configs in a secret manager (Vault/Openshift Secrets). Do not commit secrets.
-- Messaging: Kafka manifests are placeholders. Use managed Kafka or production-grade Helm charts and storage for production.
-- Security: JWT utilities and filters are included; next implement SecurityContext principal population and role checks.
-- Observability & Resilience: Istio DestinationRules and VirtualServices added; add circuit-breaker policies and health checks per service.
-- CI/CD: add pipelines (build, test, BDD) and Helm charts for deployable manifests. Favor GitOps for production deployments.
+- Secrets: use a secret manager (Vault/Openshift Secrets). Do not store secrets in repo.
+- Replace placeholder Kafka/Redis manifests with production-grade Helm charts or use managed services.
+- Rotate JWT keys and add automated secret rotation.
+- Add end-to-end BDD scenarios in CI and expand operator/Helm integration for OpenShift.
 
 See docs/ for detailed developer guides, BDD feature locations, and code review rules in CODE_REVIEW_RULES.md.

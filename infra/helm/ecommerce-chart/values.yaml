@@ -1,0 +1,23 @@
+product-service:
+  image:
+    tag: latest
+order-service:
+  image:
+    tag: latest
+auth-service:
+  image:
+    tag: latest
+api-gateway:
+  image:
+    tag: latest
+
+# Recommended third-party chart values examples
+redis:
+  architecture: standalone
+  auth:
+    enabled: false
+kafka:
+  fullnameOverride: kafka
+  replicaCount: 1
+  zookeeper:
+    replicaCount: 1

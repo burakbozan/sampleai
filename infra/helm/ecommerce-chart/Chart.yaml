@@ -1,0 +1,24 @@
+apiVersion: v2
+name: ecommerce-chart
+description: Umbrella chart for e-commerce platform
+version: 0.1.0
+dependencies:
+  - name: product-service
+    version: 0.1.0
+    repository: "file://../product-service"
+  - name: order-service
+    version: 0.1.0
+    repository: "file://../order-service"
+  - name: auth-service
+    version: 0.1.0
+    repository: "file://../auth-service"
+  - name: api-gateway
+    version: 0.1.0
+    repository: "file://../api-gateway"
+  # Third-party production-grade charts
+  - name: redis
+    version: 17.0.0
+    repository: "https://charts.bitnami.com/bitnami"
+  - name: kafka
+    version: 12.3.7
+    repository: "https://charts.bitnami.com/bitnami"

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: sampleai/api-gateway:latest
+        image: market-store/api-gateway:latest
         ports:
         - containerPort: 8080
 ---
