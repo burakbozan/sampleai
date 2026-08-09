@@ -41,3 +41,55 @@ jobs:
       - name: Run Maven tests for module
         run: |
           mvn -f ${{ matrix.module }} -B -q test
+
+  release:
+    needs: [helm-lint, maven-tests]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to Docker registry
+        if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD && secrets.DOCKER_REGISTRY }}
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push images
+        uses: docker/build-push-action@v4
+        with:
+          push: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD && secrets.DOCKER_REGISTRY }}
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/product-service:${{ github.sha }}
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/product-service:latest
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/order-service:${{ github.sha }}
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/order-service:latest
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/auth-service:${{ github.sha }}
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/auth-service:latest
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/api-gateway:${{ github.sha }}
+            ${{ secrets.DOCKER_REGISTRY }}/market-store/api-gateway:latest
+          file: ./Dockerfile
+          context: .
+      - name: Install Helm
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - name: Package Helm charts
+        run: |
+          cd infra/helm/product-service && helm package . || true
+          cd ../../order-service && helm package . || true
+          cd ../../auth-service && helm package . || true
+          cd ../../api-gateway && helm package . || true
+      - name: Upload Helm packages as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-charts
+          path: infra/helm/**/*.tgz
+      - name: Push Helm to OCI (optional)
+        if: ${{ secrets.HELM_REGISTRY && secrets.HELM_USERNAME && secrets.HELM_PASSWORD }}
+        run: |
+          helm registry login ${{ secrets.HELM_REGISTRY }} --username ${{ secrets.HELM_USERNAME }} --password ${{ secrets.HELM_PASSWORD }}
+          for f in infra/helm/*/*.tgz; do helm push "$f" oci://${{ secrets.HELM_REGISTRY }} || true; done
