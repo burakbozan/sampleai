@@ -1,5 +1,5 @@
 image:
-  repository: sampleai/order-service
+  repository: market-store/order-service
   tag: latest
 replicaCount: 2
 service:

@@ -1,4 +1,4 @@
-# SampleAI E-commerce Platform
+# Market Store E-commerce Platform
 
 A sample e-commerce microservices platform demonstrating Domain-Driven Design (DDD), Behavior-Driven Development (BDD), Test-Driven Development (TDD), and 12-factor principles. Built with Spring Boot microservices (Java) and a React frontend.
 

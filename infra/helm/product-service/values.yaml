@@ -1,5 +1,5 @@
 image:
-  repository: sampleai/product-service
+  repository: market-store/product-service
   tag: latest
 replicaCount: 2
 service:

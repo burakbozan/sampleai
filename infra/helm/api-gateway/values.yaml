@@ -1,5 +1,5 @@
 image:
-  repository: sampleai/api-gateway
+  repository: market-store/api-gateway
   tag: latest
 replicaCount: 2
 service:
