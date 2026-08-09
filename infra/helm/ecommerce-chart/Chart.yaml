@@ -15,3 +15,10 @@ dependencies:
   - name: api-gateway
     version: 0.1.0
     repository: "file://../api-gateway"
+  # Third-party production-grade charts
+  - name: redis
+    version: 17.0.0
+    repository: "https://charts.bitnami.com/bitnami"
+  - name: kafka
+    version: 12.3.7
+    repository: "https://charts.bitnami.com/bitnami"

@@ -17,8 +17,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers("/api/products","/api/products/*","/actuator/**").permitAll()
-            .antMatchers("POST","/api/products").authenticated()
+            .antMatchers("/actuator/**").permitAll()
+            .antMatchers("GET","/api/products/**").permitAll()
+            .antMatchers("POST","/api/products").hasRole("USER")
             .anyRequest().authenticated();
     }
 }

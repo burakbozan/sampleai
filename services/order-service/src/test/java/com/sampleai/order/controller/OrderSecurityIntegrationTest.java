@@ -31,7 +31,7 @@ public class OrderSecurityIntegrationTest {
 
     @Test
     public void postWithValidTokenReturnsCreated() throws Exception {
-        String token = Jwts.builder().setSubject("testuser").signWith(SignatureAlgorithm.HS256, "secret".getBytes()).compact();
+        String token = Jwts.builder().setSubject("testuser").claim("roles","USER").signWith(SignatureAlgorithm.HS256, "secret".getBytes()).compact();
         OrderDto req = new OrderDto(null, "CUST-SEC-2","[]", null);
         mvc.perform(post("/api/orders").header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(req)))

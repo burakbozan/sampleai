@@ -34,7 +34,12 @@ public class JwtFilter extends OncePerRequestFilter {
             // Populate SecurityContext with authenticated principal
             try {
                 String subject = jwtUtil.subjectFromToken(token);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null, Collections.emptyList());
+                String rolesCsv = jwtUtil.rolesFromToken(token);
+                var authorities = java.util.Arrays.stream(rolesCsv.split(","))
+                        .filter(s -> !s.isBlank())
+                        .map(r -> new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + r))
+                        .toList();
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(subject, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

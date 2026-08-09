@@ -34,7 +34,7 @@ public class ProductSecurityIntegrationTest {
 
     @Test
     public void postWithValidTokenReturnsCreated() throws Exception {
-        String token = Jwts.builder().setSubject("testuser").signWith(SignatureAlgorithm.HS256, "secret".getBytes()).compact();
+        String token = Jwts.builder().setSubject("testuser").claim("roles","USER").signWith(SignatureAlgorithm.HS256, "secret".getBytes()).compact();
         ProductDto req = new ProductDto(null, "SKU-SEC-2","Name","Desc", new BigDecimal("2.00"));
         mvc.perform(post("/api/products").header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(req)))

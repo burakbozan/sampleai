@@ -1,0 +1,43 @@
+name: CI - Helm & Tests
+
+on:
+  push:
+    branches: [ 'main', 'burakbozan-ecommerce-microservices' ]
+  pull_request:
+    branches: [ 'main' ]
+
+jobs:
+  helm-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Helm
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - name: Helm lint all charts
+        run: |
+          helm lint infra/helm/product-service || true
+          helm lint infra/helm/order-service || true
+          helm lint infra/helm/auth-service || true
+          helm lint infra/helm/api-gateway || true
+      - name: Helm template umbrella
+        run: |
+          cd infra/helm/ecommerce-chart
+          helm dependency update || true
+          helm template ecommerce-chart .
+
+  maven-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: [services/product-service, services/order-service, services/auth-service, gateway/api-gateway]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Run Maven tests for module
+        run: |
+          mvn -f ${{ matrix.module }} -B -q test
