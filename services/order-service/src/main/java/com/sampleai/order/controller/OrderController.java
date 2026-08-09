@@ -33,4 +33,13 @@ public class OrderController {
     public ResponseEntity<OrderDto> get(@PathVariable Long id) {
         return service.findById(id).map(o -> ResponseEntity.ok(new OrderDto(o.getId(), o.getCustomerId(), o.getItemsJson(), o.getStatus()))).orElse(ResponseEntity.notFound().build());
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OrderDto> updateStatus(@PathVariable Long id, @RequestBody OrderDto req) {
+        return service.findById(id).map(o -> {
+            o.setStatus(req.status);
+            Order updated = service.save(o);
+            return ResponseEntity.ok(new OrderDto(updated.getId(), updated.getCustomerId(), updated.getItemsJson(), updated.getStatus()));
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

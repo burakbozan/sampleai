@@ -17,8 +17,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers("/api/orders", "/api/orders/*", "/actuator/**").permitAll()
-            .antMatchers("POST","/api/orders").authenticated()
+            .antMatchers("/actuator/**").permitAll()
+            .antMatchers("GET","/api/orders/**").permitAll()
+            .antMatchers("POST","/api/orders").hasRole("USER")
+            .antMatchers("PATCH","/api/orders/*/status").hasRole("ADMIN")
             .anyRequest().authenticated();
     }
 }

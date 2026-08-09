@@ -26,4 +26,6 @@ public class ProductService {
     public Optional<Product> findById(Long id) { return repository.findById(id); }
     public Optional<Product> findBySku(String sku) { return repository.findBySku(sku); }
     public List<Product> listProducts() { return repository.findAll(); }
+
+    public void deleteById(Long id) { repository.deleteById(id); }
 }

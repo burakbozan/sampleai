@@ -37,4 +37,10 @@ public class ProductController {
         ProductDto dto = new ProductDto(created.getId(), created.getSku(), created.getName(), created.getDescription(), created.getPrice());
         return ResponseEntity.created(URI.create("/api/products/" + dto.id)).body(dto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
